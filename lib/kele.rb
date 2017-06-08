@@ -30,4 +30,18 @@ class Kele
     response = self.class.get("/mentors/#{mentor_id}/student_availability", headers: {"authorization" => @auth})
     JSON.parse(response.body)
   end
+  
+  def get_messages(page = nil)
+    response = self.class.get("/message_threads", values: {"page" => page}, headers: {"authorization" => @auth})
+    JSON.parse(response.body)
+  end
+  
+  def create_message(sender, recipient_id, token, subject, message)
+    response = self.class.post("/messages", values: {sender: sender, recipient_id: recipient_id, token: token, subject: subject, "stripped-text" => message}, headers: {authorization: @auth})
+    if response["success"]
+      puts "Message successfully sent"
+    else
+      puts "Message failed to send"
+    end
+  end
 end
